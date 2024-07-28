@@ -2,92 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Mpdf\Mpdf;
-use PDF;
-
 class PDFController extends Controller
 {
-//    public function generatePDF()
-//    {
-//        $data = ['title' => 'Welcome to ItSolutionStuff.com'];
-//        $pdf = PDF::loadView('myPDF', $data);
-//
-//        return $pdf->download('itsolutionstuff.pdf');
-//    }
-
-
-//    public function generatePdf()
-//    {
-//        $data = [
-//            'title' => 'Your Title Here',
-//            // other data
-//        ];
-//
-//        // Mpdf configuration
-//        $config = [
-//            'fontDir' => array_merge((new \Mpdf\Config\ConfigVariables())->getDefaults()['fontDir'], [
-//                public_path('fonts/'),
-//            ]),
-//            'fontdata' => array_merge((new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'], [
-//                'my-custom-font' => [
-//                    'R' => 'NotoSansBengali.ttf',
-//                    'useOTL' => 0xFF,
-//                    'useKashida' => 75,
-//                ],
-//            ]),
-//            'default_font' => 'my-custom-font'
-//        ];
-//
-//        $mpdf = new Mpdf($config);
-//
-//        // Load the view and pass data to it
-//        $html = view('myPDF', $data)->render();
-//
-//        // Write the HTML into the Mpdf object
-//        $mpdf->WriteHTML($html);
-//
-//        // Output the PDF
-//        $mpdf->Output('document.pdf', 'I');
-//    }
-
-    public function generatePdf()
+    public function labib()
     {
-        $data = [
-            'title' => 'Your Title Here',
-            // other data
-        ];
-
-        // Define the path to the custom font directory
         $fontDirs = [
-            public_path('fonts'),
+            public_path('pdf/fonts'),
         ];
 
-        // Define the font data
         $fontData = [
             'notosansbengali' => [
                 'R' => 'Nikosh.ttf',
                 'useOTL' => 0xFF,
-//                'useKashida' => 75,
+                'useKashida' => 75,
             ]
         ];
-
-        // Mpdf configuration
         $config = [
             'fontDir' => array_merge((new \Mpdf\Config\ConfigVariables())->getDefaults()['fontDir'], $fontDirs),
             'fontdata' => array_merge((new \Mpdf\Config\FontVariables())->getDefaults()['fontdata'], $fontData),
-            'default_font' => 'notosansbengali'
+            'default_font' => 'notosansbengali',
+            'default_font_size' => '14',
+            'format' => 'A4',
+            'mode' => '',
+            'margin_right' => 10,
+            'margin_top' => 40,
+            'margin_bottom' => 20,
+            'margin_header' => 0,
+            'margin_footer' => 0,
+            'orientation' => 'P',
+            'title' => 'Copyright Agreement',
+            'author' => '',
+            'watermark' => '',
+            'show_watermark' => false,
+            'show_watermark_image' => false,
+            'watermark_font' => 'sans-serif',
+            'display_mode' => 'fullpage',
+            'watermark_text_alpha' => 0.1,
+            'watermark_image_path' => '',
+            'watermark_image_alpha' => 0.2,
+            'watermark_image_size' => 'D',
+            'watermark_image_position' => 'P',
+            'custom_font_dir' => '',
+            'custom_font_data' => [],
+            'auto_language_detection' => false,
+            'temp_dir' => storage_path('app'),
+            'pdfa' => false,
+            'pdfaauto' => false,
+            'use_active_forms' => false,
+
+
+        ];
+        $mpdf = new \Mpdf\Mpdf($config);
+        $mpdf->SetHeader('<div class="text-center" style="border-bottom: 1px dotted #3d3b3b; padding: 4px;"><img src="' . public_path('pdf/logo/copyright.png') . '" style="height: 60px; padding: 20px" class="img-fluid" alt="no image"></div>');
+        //                $mpdf->SetFooter('{PAGENO}');
+
+        $data = [
+            'title' => 'Your Title Here',
         ];
 
-        $mpdf = new \Mpdf\Mpdf($config);
-
-        // Load the view and pass data to it
-        $html = view('myPDF', $data)->render();
-
-        // Write the HTML into the Mpdf object
+        $html = view('myPDF', compact('data'))->render();
         $mpdf->WriteHTML($html);
-
-        // Output the PDF
-        $mpdf->Output('document.pdf', 'D');
+        return $mpdf->Output('title.pdf', 'I');
     }
+
 }
